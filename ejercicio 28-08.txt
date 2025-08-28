@@ -1,7 +1,6 @@
 USE Northwind;
 
 GO
-
 --uso de subconsultas
 SELECT * FROM Customers
 WHERE CustomerID IN (   
