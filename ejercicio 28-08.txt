@@ -1,0 +1,74 @@
+USE Northwind;
+
+GO
+
+--uso de subconsultas
+SELECT * FROM Customers
+WHERE CustomerID IN (   
+      select CustomerID from Customers
+      where CustomerID in ('ALFKI', 'ANATR', 'ANTON', 'AROUT', 'BERGS')
+)
+
+SELECT CategoryID, count(*) from Products p
+where CategoryID in (
+      select top 5 CategoryID from Categories
+)
+group by CategoryID
+
+SELECT 'PIAD-302'FROM Categories
+UNION
+SELECT 'PIAD-303'FROM Categories
+
+SELECT 'PIAD-302'FROM Categories
+UNION ALL
+SELECT 'PIAD-303'FROM Categories
+
+--UNIR TODAS LAS FILAS, ID Y NOMBRE DE LAS TABLAS PRODUCTOS Y CATEGORIAS
+
+SELECT CategoryID from Categories
+union 
+select ProductID from Products
+
+SELECT CategoryName from Categories
+union 
+select ProductName from Products
+
+SELECT CategoryID , CategoryName from Categories
+union all
+select ProductID , ProductName from Products
+
+
+--consulta - uso de inner join
+SELECT * FROM Products p
+INNER JOIN Categories c ON p.CategoryID = c.CategoryID
+
+-- mostrar el productoid, productname , unitprice , categoryname
+SELECT p.ProductID, p.ProductName, p.UnitPrice, c.CategoryName FROM Products p
+INNER JOIN Categories c ON p.CategoryID = c.CategoryID
+
+-- orders y customers
+select o.OrderID, o.OrderDate,o.ShipCity,c.CustomerID, c.CompanyName,c.ContactName from Orders o
+INNER JOIN Customers c on o.CustomerID = c.CustomerID
+
+-- orders y orders details
+select 
+o.CustomerID, o.OrderDate, o.OrderID, o.ShipPostalCode, o.RequiredDate
+from Orders o
+
+--ejercicio 1
+SELECT
+c.CompanyName, sum(od.UnitPrice * od.Quantity ) AS TOTAL
+from Orders o 
+INNER JOIN [Order Details] od on o.OrderID = od.OrderID
+INNER JOIN  Customers c on o.CustomerID = c.CustomerID
+group by  c.CompanyName
+order by TOTAL asc;
+
+--ejercicio 2
+SELECT
+e.FirstName , count(o.OrderID)as TOTAL
+from Orders o
+INNER JOIN Employees e on o.EmployeeID = e.EmployeeID
+group by e.FirstName
+order by TOTAL ASC;
+
